@@ -1,9 +1,10 @@
+const {validationResult} = require('express-validator');
+
 let {courses} = require('../data/courses');
 
 const getAllCourses = (req, res) => {
     res.status(200).json(courses);
 };
-
 
 const getCourse = (req, res) => {
     const courseId = +req.params.courseId;
@@ -13,7 +14,6 @@ const getCourse = (req, res) => {
 
     res.status(200).json(course);
 };
-
 
 const createCourse = (req, res) => {
     const errors = validationResult(req);
@@ -25,7 +25,6 @@ const createCourse = (req, res) => {
 
     res.status(201).json({msg: "Course created successfully.", course: newCourse});
 };
-
 
 const updateCourse = (req, res) => {
     const errors = validationResult(req);
@@ -41,7 +40,6 @@ const updateCourse = (req, res) => {
     courses[courseIndex] = {...courses[courseIndex], ...req.body};
     res.status(202).json({msg: "Course updated successfully.", course: courses[courseIndex]});
 };
-
 
 const deleteCourse = (req, res) => {
     const courseId = +req.params.courseId;
