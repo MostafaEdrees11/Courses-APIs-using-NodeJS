@@ -99,6 +99,18 @@ app.patch('/api/courses/:courseId', updateCourseValidator, (req, res) => {
     res.status(202).json({msg: "Course updated successfully.", course: courses[courseIndex]});
 })
 
+
+// Delete a course
+app.delete('/api/courses/:courseId', (req, res) => {
+    const courseId = +req.params.courseId;
+    let courseIndex = courses.findIndex((course) => course.id === courseId);
+
+    if(courseIndex === -1) return res.status(404).json({msg: "Course not found."});
+
+    courses.splice(courseIndex, 1);
+    res.status(202).json({msg: "Course deleted successfully."});
+})
+
 app.listen(portNum, () => {
     console.log(`Server connected on portNum: ${portNum}`);
 })
