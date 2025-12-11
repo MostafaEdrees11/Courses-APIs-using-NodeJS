@@ -71,6 +71,34 @@ app.post('/api/courses', newCourseValidator, (req, res) => {
     res.status(201).json({msg: "Course created successfully.", course: newCourse});
 })
 
+
+// Update a course
+const updateCourseValidator = [
+    body('title')
+        .optional()
+        .isString().withMessage('Course title must be string.')
+        .contains('course').withMessage('Course title must end with (course) keyword.')
+        .isLength({min: 8, max: 30}).withMessage('Course title must be between 8 and 30 characters.'),
+
+    body('price')
+        .optional()
+        .isFloat({min: 0, max: 5000}).withMessage('Course price must be number & between 0 to 5000$.')
+]
+app.patch('/api/courses/:courseId', updateCourseValidator, (req, res) => {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) return res.status(400).json({errors: errors.array()});
+
+    if(!req.body.title && !req.body.price) return res.status(400).json({msg: "You don't provide any data."});
+    
+    const courseId = +req.params.courseId;
+    let courseIndex = courses.findIndex((course) => course.id === courseId);
+
+    if(courseIndex === -1) return res.status(404).json({msg: "Course not found."});
+
+    courses[courseIndex] = {...courses[courseIndex], ...req.body};
+    res.status(202).json({msg: "Course updated successfully.", course: courses[courseIndex]});
+})
+
 app.listen(portNum, () => {
     console.log(`Server connected on portNum: ${portNum}`);
 })
