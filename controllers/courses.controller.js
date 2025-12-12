@@ -1,54 +1,60 @@
 const {validationResult} = require('express-validator');
 
-let {courses} = require('../data/courses');
+const courseModle = require('../models/course.model');
 
-const getAllCourses = (req, res) => {
+const getAllCourses = async (req, res) => {
+    const courses = await courseModle.find();
     res.status(200).json(courses);
 };
 
-const getCourse = (req, res) => {
-    const courseId = +req.params.courseId;
-    const course = courses.find((course) => course.id === courseId);
-    
-    if(!course) return res.status(404).json({msg: "Course not found."});
+const getCourse = async (req, res) => {
+    try {
+        const course = await courseModle.findById(req.params.courseId);    
+        if(!course) return res.status(404).json({msg: "Course not found."});
 
-    res.status(200).json(course);
+        res.status(200).json(course);
+    } catch(error) {
+        return res.status(404).json({msg: "Invalid ObjectId."});
+    }
 };
 
-const createCourse = (req, res) => {
+const createCourse = async (req, res) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()) return res.status(400).json({errors: errors.array()});
 
-    const newCourse = req.body;
-    newCourse.id = courses.length + 1;
-    courses.push(newCourse);
+    const newCourse = new courseModle(req.body);
+    await newCourse.save();
 
     res.status(201).json({msg: "Course created successfully.", course: newCourse});
 };
 
-const updateCourse = (req, res) => {
+const updateCourse = async (req, res) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()) return res.status(400).json({errors: errors.array()});
 
     if(!req.body.title && !req.body.price) return res.status(400).json({msg: "You don't provide any data."});
     
-    const courseId = +req.params.courseId;
-    let courseIndex = courses.findIndex((course) => course.id === courseId);
+    try {
+        let course = await courseModle.findById(req.params.courseId);
+        if(!course) return res.status(404).json({msg: "Course not found."});
 
-    if(courseIndex === -1) return res.status(404).json({msg: "Course not found."});
-
-    courses[courseIndex] = {...courses[courseIndex], ...req.body};
-    res.status(202).json({msg: "Course updated successfully.", course: courses[courseIndex]});
+        await course.updateOne({$set: {...req.body}});
+        res.status(202).json({msg: "Course updated successfully."});
+    } catch (error) {
+        return res.status(400).json({msg: "Invalid ObjectId."});
+    }
 };
 
-const deleteCourse = (req, res) => {
-    const courseId = +req.params.courseId;
-    let courseIndex = courses.findIndex((course) => course.id === courseId);
+const deleteCourse = async (req, res) => {
+    try {
+        const course = await courseModle.findById(req.params.courseId);
+        if(!course) return res.status(404).json({msg: "Course not found."});
 
-    if(courseIndex === -1) return res.status(404).json({msg: "Course not found."});
-
-    courses.splice(courseIndex, 1);
-    res.status(202).json({msg: "Course deleted successfully."});
+        await course.deleteOne();
+        res.status(202).json({msg: "Course deleted successfully."});
+    } catch(error) {
+        return res.status(400).json({msg: "Invalid ObjectId."});
+    }
 };
 
 
