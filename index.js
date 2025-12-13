@@ -1,10 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
+require('dotenv').config();
 
 const app = express();
-const portNum = 8080;
+const portNum = process.env.PORTNUMBER || 8011;
 
-const url = 'mongodb+srv://mostafaedrees11:nodejs%2Amongodb%23@learn-mongo-db.hk4scg8.mongodb.net/simple-nodejs-project?appName=learn-mongo-db';
+const url = process.env.MONGODB_URL;
 mongoose.connect(url).then(() => {
     console.log("Connected to DB Server Successfully.");
 });
