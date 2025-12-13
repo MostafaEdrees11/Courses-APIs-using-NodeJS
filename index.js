@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
+const cors = require('cors');
 
 const notFoundMiddleware = require('./middlewares/notFound.middleware');
 
@@ -11,6 +12,8 @@ const url = process.env.MONGODB_URL;
 mongoose.connect(url).then(() => {
     console.log("Connected to DB Server Successfully.");
 });
+
+app.use(cors());
 
 const coursesRouter = require('./routes/courses.routes');
 
