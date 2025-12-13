@@ -4,6 +4,7 @@ require('dotenv').config();
 const cors = require('cors');
 
 const notFoundMiddleware = require('./middlewares/notFound.middleware');
+const errorMiddleware = require('./middlewares/error.middleware');
 
 const app = express();
 const portNum = process.env.PORTNUMBER || 8011;
@@ -21,8 +22,11 @@ app.use(express.json());
 
 app.use('/api/courses', coursesRouter.router);
 
-// handle the requests that don't match any route
+// global middleware to handle the requests that don't match any route
 app.use(notFoundMiddleware);
+
+// global error handler
+app.use(errorMiddleware);
 
 app.listen(portNum, () => {
     console.log(`Server connected on portNum: ${portNum}`);
