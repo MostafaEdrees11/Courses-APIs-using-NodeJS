@@ -5,7 +5,7 @@ const courseModle = require('../models/course.model');
 const httpStatusText = require('../utils/httpStatusText');
 
 const getAllCourses = async (req, res) => {
-    const courses = await courseModle.find();
+    const courses = await courseModle.find({}, {__v: false});
     res.status(200).json({
         status: httpStatusText.SUCCESS,
         data: { courses }
@@ -14,7 +14,7 @@ const getAllCourses = async (req, res) => {
 
 const getCourse = async (req, res) => {
     try {
-        const course = await courseModle.findById(req.params.courseId);    
+        const course = await courseModle.findById(req.params.courseId, {__v: false});    
         if(!course) {
             return res.status(404).json({
                 status: httpStatusText.FAIL,
