@@ -1,4 +1,5 @@
 const {validationResult} = require('express-validator');
+const bcrypt = require('bcryptjs');
 
 const userModle = require('../models/user.model');
 
@@ -21,12 +22,15 @@ const register = asyncWrapper(
             return next(AppError);
         }
 
-        const newUser = new userModle(req.body);
+        const hashingPassword = await bcrypt.hash(req.body.password, 8);
+
+        const newUser = new userModle({...req.body, password: hashingPassword});
         await newUser.save();
 
+        const {password, __v, ...safeUserData } = newUser._doc;
         res.status(201).json({
             status: httpStatusText.SUCCESS,
-            data: {user: newUser}
+            data: {user: safeUserData}
         });
     }
 );

@@ -9,7 +9,7 @@ const getAllUsers = asyncWrapper(
         const limit = +req.query.limit || 6;
         const page = +req.query.page || 1;
         const skip = (page - 1) * limit;
-        const users = await userModle.find({}, {__v: false}).limit(limit).skip(skip);
+        const users = await userModle.find({}, {password: false, __v: false}).limit(limit).skip(skip);
 
         res.status(200).json({
             status: httpStatusText.SUCCESS,
