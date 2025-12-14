@@ -17,10 +17,14 @@ mongoose.connect(url).then(() => {
 app.use(cors());
 
 const coursesRouter = require('./routes/courses.routes');
+const usersRouter = require('./routes/users.routes');
+const authRouter = require('./routes/auth.routes');
 
 app.use(express.json());
 
 app.use('/api/courses', coursesRouter.router);
+app.use('/api/users', usersRouter.router);
+app.use('/api/auth', authRouter.router);
 
 // global middleware to handle the requests that don't match any route
 app.use(notFoundMiddleware);
