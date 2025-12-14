@@ -4,8 +4,10 @@ const router = express.Router();
 
 const usersController = require('../controllers/users.controller');
 
+const verifyJWTtokenMiddleware = require('../middlewares/verifyJWTtoken.middleware');
+
 router.route('/')
-        .get(usersController.getAllUsers);
+        .get(verifyJWTtokenMiddleware, usersController.getAllUsers);
 
 
 module.exports = {router};
