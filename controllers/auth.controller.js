@@ -5,6 +5,7 @@ const userModle = require('../models/user.model');
 
 const httpStatusText = require('../utils/httpStatusText');
 const AppError = require('../utils/appError');
+const generateJWTtoken = require('../utils/generateJWTtoken');
 
 const asyncWrapper = require('../middlewares/asyncWrapper.middleware');
 
@@ -24,7 +25,10 @@ const register = asyncWrapper(
 
         const hashingPassword = await bcrypt.hash(req.body.password, 8);
 
-        const newUser = new userModle({...req.body, password: hashingPassword});
+        const newUser = new userModle({...req.body, password: hashingPassword, token: ''});
+
+        newUser.token = generateJWTtoken({ email: newUser.email, id: newUser._id }, '1m');
+
         await newUser.save();
 
         const {password, __v, ...safeUserData } = newUser._doc;
@@ -57,10 +61,12 @@ const login = asyncWrapper(
             AppError.create("Password is incorrect.", 400, httpStatusText.FAIL);
             return next(AppError);
         }
+
+        isUserExists.token = generateJWTtoken({ email: isUserExists.email, id: isUserExists._id }, '1m');
         
         return res.status(200).json({
             status: httpStatusText.SUCCESS,
-            data: "logged in."
+            data: { token: isUserExists.token }
         });
     }
 );
