@@ -9,7 +9,7 @@ router.route('/register')
         .post(usersMiddlewareValidation.createUserValidation(), authController.register);
 
 router.route('/login')
-        .post(authController.login);
+        .post(usersMiddlewareValidation.userLoginValidation(), authController.login);
 
 
 module.exports = {router};

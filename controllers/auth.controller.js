@@ -37,7 +37,31 @@ const register = asyncWrapper(
 
 const login = asyncWrapper(
     async (req, res, next) => {
+        const errors = validationResult(req);
+        if(!errors.isEmpty()) {
+            AppError.create(errors.array(), 400, httpStatusText.FAIL);
+            return next(AppError);
+        }
         
+        let inputEmail = req.body.email;
+        let inputPassword = req.body.password;
+
+        const isUserExists = await userModle.findOne({email: inputEmail});
+        if(!isUserExists) {
+            AppError.create("This mail doen't exist.", 400, httpStatusText.FAIL);
+            return next(AppError);
+        }
+
+        const isPasswordMatching = await bcrypt.compare(inputPassword, isUserExists.password);
+        if(!isPasswordMatching) {
+            AppError.create("Password is incorrect.", 400, httpStatusText.FAIL);
+            return next(AppError);
+        }
+        
+        return res.status(200).json({
+            status: httpStatusText.SUCCESS,
+            data: "logged in."
+        });
     }
 );
 

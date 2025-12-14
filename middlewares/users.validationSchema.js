@@ -21,9 +21,24 @@ const createUserValidation = () => {
         body('password')
             .exists().withMessage('password is required.')
             .isString().withMessage('password must be string.')
-            .matches(/^(?=.*[A-Z])[A-Za-z\d!@#%&]{8,}$/).withMessage('Password must be at least 8 characters, include only one uppercase letter and special characters from !@#%&')
-            .isLength({min: 8, max: 30}).withMessage('password must be between 8 and 30 characters.')
+            .matches(/^(?=.*[A-Z])[A-Za-z\d!@#%&]{8,30}$/).withMessage('Password must be at least 8 characters, include only one uppercase letter and special characters from !@#%&. Password maximum length is 30 characters.')
     ];
 }
 
-module.exports = {createUserValidation}
+const userLoginValidation = () => {
+    return [
+        body('email')
+            .exists().withMessage('email is required.')
+            .isEmail().withMessage('enter a valid email'),
+
+        body('password')
+            .exists().withMessage('password is required.')
+            .isString().withMessage('password must be string.')
+            .matches(/^(?=.*[A-Z])[A-Za-z\d!@#%&]{8,30}$/).withMessage('Password must be at least 8 characters, include only one uppercase letter and special characters from !@#%&. Password maximum length is 30 characters.')
+    ];
+}
+
+module.exports = {
+    createUserValidation,
+    userLoginValidation
+}
