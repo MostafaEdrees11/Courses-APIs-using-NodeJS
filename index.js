@@ -2,12 +2,15 @@ const express = require('express');
 const mongoose = require('mongoose');
 require('dotenv').config();
 const cors = require('cors');
+const path = require('path');
 
 const notFoundMiddleware = require('./middlewares/notFound.middleware');
 const errorMiddleware = require('./middlewares/error.middleware');
 
 const app = express();
 const portNum = process.env.PORTNUMBER || 8011;
+
+app.use('/api/uploads', express.static(path.join(__dirname, 'uploads', 'profileImages')));
 
 const url = process.env.MONGODB_URL;
 mongoose.connect(url).then(() => {

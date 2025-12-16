@@ -1,4 +1,4 @@
-const {body} = require('express-validator');
+const { body } = require('express-validator');
 
 const createUserValidation = () => {
     return [
@@ -6,13 +6,13 @@ const createUserValidation = () => {
             .exists().withMessage('firstName is required.')
             .isString().withMessage('firstName must be string.')
             .matches(/^[a-zA-Z]+$/).withMessage('firstName must consist of letters only a-z & A-Z')
-            .isLength({min: 3, max: 25}).withMessage('firstName must be between 3 and 25 characters.'),
+            .isLength({ min: 3, max: 25 }).withMessage('firstName must be between 3 and 25 characters.'),
 
         body('lastName')
             .exists().withMessage('lastName is required.')
             .isString().withMessage('lastName must be string.')
             .matches(/^[a-zA-Z]+$/).withMessage('lastName must consist of letters only a-z & A-Z')
-            .isLength({min: 3, max: 25}).withMessage('lastName must be between 3 and 25 characters.'),
+            .isLength({ min: 3, max: 25 }).withMessage('lastName must be between 3 and 25 characters.'),
 
         body("email")
             .exists().withMessage('email is required.')
@@ -44,13 +44,13 @@ const updateUserValidation = () => {
             .optional()
             .isString().withMessage('firstName must be string.')
             .matches(/^[a-zA-Z]+$/).withMessage('firstName must consist of letters only a-z & A-Z')
-            .isLength({min: 3, max: 25}).withMessage('firstName must be between 3 and 25 characters.'),
+            .isLength({ min: 3, max: 25 }).withMessage('firstName must be between 3 and 25 characters.'),
 
         body('lastName')
             .optional()
             .isString().withMessage('lastName must be string.')
             .matches(/^[a-zA-Z]+$/).withMessage('lastName must consist of letters only a-z & A-Z')
-            .isLength({min: 3, max: 25}).withMessage('lastName must be between 3 and 25 characters.'),
+            .isLength({ min: 3, max: 25 }).withMessage('lastName must be between 3 and 25 characters.'),
 
         body('email')
             .optional()
