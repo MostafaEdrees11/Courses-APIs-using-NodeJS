@@ -72,9 +72,26 @@ const updateUser = asyncWrapper(
     }
 );
 
+const deleteUser = asyncWrapper(
+    async (req, res, next) => {
+        const user = await userModle.findById(req.params.userId);
+        if (!user) {
+            AppError.create('User not found', 404, httpStatusText.FAIL);
+            return next(AppError);
+        }
+
+        await user.deleteOne();
+        res.status(202).json({
+            status: httpStatusText.SUCCESS,
+            data: null
+        });
+    }
+);
+
 
 module.exports = {
     getAllUsers,
     getUser,
-    updateUser
+    updateUser,
+    deleteUser
 }
