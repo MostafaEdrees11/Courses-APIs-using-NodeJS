@@ -1,5 +1,7 @@
 const bcrypt = require('bcryptjs');
 const { validationResult } = require('express-validator');
+const fs = require('fs');
+const path = require('path');
 
 const userModle = require('../models/user.model');
 
@@ -80,7 +82,10 @@ const deleteUser = asyncWrapper(
             return next(AppError);
         }
 
+        const profileImgPath = path.join('uploads', 'profileImages', user.profileImg);
+        fs.rmSync(profileImgPath);
         await user.deleteOne();
+
         res.status(202).json({
             status: httpStatusText.SUCCESS,
             data: null
