@@ -27,7 +27,7 @@ const register = asyncWrapper(
 
         const newUser = new userModle({...req.body, password: hashingPassword, token: ''});
 
-        newUser.token = generateJWTtoken({ email: newUser.email, id: newUser._id }, '1m');
+        newUser.token = generateJWTtoken({ email: newUser.email, id: newUser._id, role: newUser.role }, '1m');
 
         await newUser.save();
 
@@ -62,7 +62,7 @@ const login = asyncWrapper(
             return next(AppError);
         }
 
-        isUserExists.token = generateJWTtoken({ email: isUserExists.email, id: isUserExists._id }, '1m');
+        isUserExists.token = generateJWTtoken({ email: isUserExists.email, id: isUserExists._id, role: isUserExists.role }, '1m');
         
         return res.status(200).json({
             status: httpStatusText.SUCCESS,

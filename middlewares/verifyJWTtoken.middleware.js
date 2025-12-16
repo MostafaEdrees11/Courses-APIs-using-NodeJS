@@ -12,7 +12,8 @@ const verifyJWTtoken = (req, res, next) => {
     const token = authorizationHeader.split(' ')[1];
     
     try {
-        jwt.verify(token, process.env.TOKEN_SECRET_KEY);
+        const currentUser = jwt.verify(token, process.env.TOKEN_SECRET_KEY);
+        req.currentUser = currentUser;
         next();
     } catch (error) {
         AppError.create('Invalid JWT token', 401, httpStatusText.ERROR);
