@@ -38,3 +38,5 @@ app.use(errorMiddleware);
 app.listen(portNum, () => {
     console.log(`Server connected on portNum: ${portNum}`);
 })
+
+module.exports = app;
